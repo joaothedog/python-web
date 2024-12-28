@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto</title>
+    <link rel="stylesheet" href="\static\styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Produto</h1>
+        <form action="{{ url_for('atualizar', id=produto.id) }}" method="POST" class="form-adicionar">
+            <input type="text" name="nome" placeholder="Nome do Produto" value="{{ produto.nome }}" required>
+            <input type="number" step="0.01" name="preco" placeholder="Preço" value="{{ produto.preco }}" required>
+            <textarea name="descricao" placeholder="Descrição">{{ produto.descricao }}</textarea>
+            <button type="submit">Atualizar Produto</button>
+        </form>
+        <a href="{{ url_for('index') }}" class="btn-voltar">Voltar</a>
+    </div>
+</body>
+</html>

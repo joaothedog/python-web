@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Produtos</title>
+    <link rel="stylesheet" href="\static\styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciamento de Produtos</h1>
+
+        <!-- Formulário para adicionar produto -->
+        <form action="{{ url_for('adicionar') }}" method="POST" class="form-adicionar">
+            <input type="text" name="nome" placeholder="Nome do Produto" required>
+            <input type="number" step="0.01" name="preco" placeholder="Preço" required>
+            <textarea name="descricao" placeholder="Descrição (opcional)"></textarea>
+            <button type="submit">Adicionar Produto</button>
+        </form>
+
+        <!-- Lista de produtos -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.id }}</td>
+                    <td>{{ produto.nome }}</td>
+                    <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
+                    <td>{{ produto.descricao }}</td>
+                    <td>
+                        <form action="{{ url_for('deletar', id=produto.id) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn-deletar">Deletar</button>
+                        </form>
+                        <a href="{{ url_for('editar', id=produto.id) }}" class="btn-editar">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
