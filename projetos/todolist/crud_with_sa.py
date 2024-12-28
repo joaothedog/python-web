@@ -55,6 +55,9 @@ def register():
 #renderiza todas as tarefas
 @app.route("/")
 def index():
+    if 'usuario_id' not in session:
+        flash("Voce precisa realizar o login para acessar a página", "danger")
+        return redirect(url_for("login"))
     tarefas = Tarefa.query.all() #semelhante ao fetchall
     return render_template("index.html", tarefas=tarefas)
 

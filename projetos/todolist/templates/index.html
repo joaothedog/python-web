@@ -6,6 +6,7 @@
 </head>
 <body>
     <div class="container">
+        <a href="{{ url_for('logout') }}" class="btn">Logout</a>
         <h1>Lista de Tarefas</h1>
         <form method="post" action="/add">
             <input type="text" name="descricao" placeholder="Nova tarefa" required>
