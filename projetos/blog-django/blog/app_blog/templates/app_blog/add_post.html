@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Blog - Django</title>
+    <title>Adicionar Post</title>
 </head>
 <body>
-    <h1>Criar nova postagem</h1>
-    <form method="post">
+    <h1>Adicionar Novo Post</h1>
+    <form method="POST">
         {% csrf_token %}
-        <label for="titulo">Título:</label><br>
-        <input type="text" id="titulo" name="titulo" required><br><br>
-        <label for="conteudo">Conteúdo:</label><br>
-        <textarea id="conteudo" name="conteudo" required></textarea><br><br>
-        <button type="submit">Criar</button>
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required><br>
+
+        <label for="conteudo">Conteúdo:</label>
+        <textarea id="conteudo" name="conteudo" rows="5" required></textarea><br>
+
+        <label for="categoria">Categoria:</label>
+        <select id="categoria" name="categoria" required>
+            {% for categoria in categorias %}
+                <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+            {% endfor %}
+        </select><br>
+
+        <button type="submit">Adicionar Post</button>
     </form>
-    <a href="{% url 'posts' %}">Voltar</a>
 </body>
 </html>

@@ -6,12 +6,27 @@
 <body>
     <h1>Postagens</h1>
     <a href="{% url 'add_post' %}">Criar nova postagem</a>
+<h1>Postagens</h1>
+<!-- Filtro por categoria -->
+<form method="get" action="">
+    <label for="categoria">Escolha uma categoria:</label>
+    <select name="categoria" id="categoria">
+        <option value="">--Todas as Categorias--</option>
+        {% for categoria in categorias %}
+            <option value="{{ categoria.id }}" {% if categoria.id == request.GET.categoria %}selected{% endif %}>
+                {{ categoria.nome }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filtrar</button>
+</form>
     <ul>
         {% for postagem in postagens %}
             <li>
                 <h2>{{ postagem.titulo }}</h2>
                 <p>{{ postagem.conteudo }}</p>
                 <small>Criado em: {{ postagem.data }}</small>
+                <p>Categoria: {{ postagem.categoria.nome }}</p>
             </li>
         {% endfor %}
     </ul>

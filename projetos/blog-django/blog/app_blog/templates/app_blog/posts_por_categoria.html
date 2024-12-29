@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Posts na Categoria: {{ categoria.nome }}</title>
+</head>
+<body>
+    <h1>Posts na Categoria: {{ categoria.nome }}</h1>
+    <nav>
+        <h3>Categorias</h3>
+        <ul>
+            {% for categoria in categorias %}
+                <li>
+                    <a href="{% url 'posts_por_categoria' categoria.id %}">{{ categoria.nome }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <ul>
+        {% for postagem in postagens %}
+            <li>
+                <h2>{{ postagem.titulo }}</h2>
+                <p>{{ postagem.conteudo }}</p>
+                <small>{{ postagem.data }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'posts' %}">Voltar para todos os posts</a>
+</body>
+</html>
