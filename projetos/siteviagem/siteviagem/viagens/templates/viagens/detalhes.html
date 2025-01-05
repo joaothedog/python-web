@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes da Viagem</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <header>
+      <h1>Detalhes da Viagem</h1>
+    </header>
+    <main>
+      <ul>
+        {% for gasto in viagem.gastos_extras.all %}
+          <li>{{ gasto.descricao }}: R${{ gasto.valor }}</li>
+        {% endfor %}
+      </ul>
+      
+      <section class="adicionar-gasto-extra">
+        <a href="{% url 'adicionar_gasto_extra' viagem.id %}">Adicionar Gasto Extra</a>
+      </section>
+
+      <p>
+        <strong>Destino:</strong> {{ viagem.get_destino_display }}
+      </p>
+      <p>
+        <strong>Nome do motorista:</strong> {{ viagem.nome_motorista }}
+      </p>
+      <p>
+        <strong>Horário:</strong> {{ viagem.horario }}
+      </p>
+      <p>
+        <strong>Total de Passageiros:</strong> {{ viagem.total_passageiros }}
+      </p>
+      <p>
+        <strong>Receita Bruta:</strong> R$ {{ viagem.receita_bruta|floatformat:2 }}
+      </p>
+      <p>
+        <strong>Receita Líquida:</strong> R$ {{ viagem.receita_liquida|floatformat:2 }}
+      </p>
+      <br />
+      <a href="/" class="btn">Voltar</a>
+      <br />
+      <br />
+      <a href="https://wa.me/{{ viagem.motorista_whatsapp }}?text={{ mensagem_whatsapp|urlencode }}" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">Enviar Detalhes pelo WhatsApp</a>
+    </main>
+  </body>
+</html>

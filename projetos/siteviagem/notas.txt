@@ -1,0 +1,9 @@
+adicionar no projeto:
+
+1 - contador de viagens cadastradas (total) - FEITO
+2 - separador de viagens abaixo de cada viagem cadastrada - FEITO
+3 - paginação de viagens (index) - FEITO
+4 - cadastrar numero do motorista e mensagem automatica para ele com as informações da viagem - FEITO
+5 - filtrar nome do motorista - FEITO
+6 - abrir popup
+7 - filtrar por data inicio data fim - FEITO

@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Viagens</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <header>
+      <h1>Gerenciador de Viagens - Prefeitura Ituaçu</h1>
+    </header>
+    <main>
+      <h2>
+        Viagens - Total de viagens:{% with total_viagens=viagens_ativas|length %}
+          {{ total_viagens }}
+        {% endwith %}
+      </h2>
+      <form method="get" action="{% url 'index' %}">
+        <label for="nome_motorista">Buscar por Motorista:</label>
+        <input type="text" name="nome_motorista" id="nome_motorista" value="{{ busca_motorista }}" placeholder="Digite o nome do motorista" />
+        <button type="submit">Buscar</button>
+        <a class="button" href="/">Limpar</a>
+      </form>
+      <hr>
+      <form method="get" action="">
+        <label for="data_inicio">Data Início:</label>
+        <input type="date" id="data_inicio" name="data_inicio" value="{{ data_inicio|date:'Y-m-d' }}">
+        
+        <label for="data_fim">Data Fim:</label>
+        <input type="date" id="data_fim" name="data_fim" value="{{ data_fim|date:'Y-m-d' }}">
+        
+        <button type="submit">Filtrar</button>
+        <a class="button" href="/">Limpar</a>
+      </form>
+      <hr>
+      <ul class="separator">
+        {% for viagem in viagens_ativas %}
+          <li>
+            <tr>
+              <td>{{ viagem.destino }} -</td>
+              <td>{{ viagem.horario }} -</td>
+              <td>
+                <a href="{% url 'detalhes_viagem' viagem.id %}">Detalhes</a> |
+                <a href="{% url 'excluir_viagem' viagem.id %}" onclick="return confirm('Tem certeza que deseja excluir esta viagem?');">Excluir</a>
+              </td>
+              <p>
+                <td>
+                  <strong>Nome do motorista:</strong> {{ viagem.nome_motorista }}
+                </td>
+              </p>
+            </tr>
+          </li>
+        {% empty %}
+          <li>Nenhuma viagem encontrada.</li>
+        {% endfor %}
+      </ul>
+      <div class="pagination">
+        <span class="step-links">
+          {% if viagens_ativas.has_previous %}
+            <a href="?page=1{% if busca_motorista %}
+                &nome_motorista={{ busca_motorista }}
+              {% endif %}{% if busca_data %}
+                &data={{ busca_data }}
+              {% endif %}">
+              &laquo; Primeira
+            </a>
+            <a href="?page={{ viagens_ativas.previous_page_number }}{% if busca_motorista %}
+                &nome_motorista={{ busca_motorista }}
+              {% endif %}{% if busca_data %}
+                &horario={{ busca_data }}
+              {% endif %}">
+              Anterior
+            </a>
+          {% endif %}
+
+          <span class="current">Página {{ viagens_ativas.number }} de {{ viagens_ativas.paginator.num_pages }}.</span>
+
+          {% if viagens_ativas.has_next %}
+            <a href="?page={{ viagens_ativas.next_page_number }}{% if busca_motorista %}
+                &nome_motorista={{ busca_motorista }}
+              {% endif %}{% if busca_data %}
+                &horario={{ busca_data }}
+              {% endif %}">
+              Próxima
+            </a>
+            <a href="?page={{ viagens_ativas.paginator.num_pages }}{% if busca_motorista %}
+                &nome_motorista={{ busca_motorista }}
+              {% endif %}{% if busca_data %}
+                &horario={{ busca_data }}
+              {% endif %}">
+              Última &raquo;
+            </a>
+          {% endif %}
+        </span>
+      </div>
+      <a href="{% url 'nova_viagem' %}" class="btn">Nova Viagem</a>
+    </main>
+  </body>
+</html>

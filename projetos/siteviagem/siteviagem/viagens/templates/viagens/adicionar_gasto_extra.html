@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="titulo-pagina">Adicionar Gasto Extra - Viagem para {{ viagem.get_destino_display }}</h2>
+
+<!-- Formulário de adicionar gasto -->
+<div class="form-container">
+    <form method="post" class="form-gasto-extra">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-submit">Adicionar Gasto</button>
+    </form>
+</div>
+
+<!-- Link para voltar à página de detalhes da viagem -->
+<a href="{% url 'detalhes_viagem' viagem.id %}" class="btn-voltar">Voltar</a>
+{% endblock %}
