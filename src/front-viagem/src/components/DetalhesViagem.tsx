@@ -15,11 +15,10 @@ interface Gasto {
 const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { viagem: any; onClose: () => void }) => {
     const [gastos, setGastos] = useState<Gasto[]>([]);
     const [gastoDescricao, setGastoDescricao] = useState('');
-    const [gastoValor, setGastoValor] = useState<string>('');
+    const [gastoValor, setGastoValor] = useState<string>(''); // Iniciar como string vazia
 
-    // Acessa os dados diretamente de 'viagem.viagem'
     const viagemDetalhes = viagem?.viagem;
-
+    
     useEffect(() => {
         if (viagemDetalhes) {
             setGastos(viagemDetalhes.gastos || []);
@@ -27,30 +26,30 @@ const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { vi
     }, [viagemDetalhes]);
 
     const handleAdicionarGasto = async () => {
-        const valorNumerico = parseFloat(gastoValor); // Converte o valor para número
-        if (!viagem?.id || !gastoDescricao || isNaN(valorNumerico) || valorNumerico <= 0) {
+        if (!viagemDetalhes?.id || !gastoDescricao || isNaN(parseFloat(gastoValor)) || parseFloat(gastoValor) <= 0) {
             alert('Preencha todos os campos com valores válidos.');
             return;
         }
+    
+        const valorNumerico = parseFloat(gastoValor);
+    
         try {
-            // Adicionar o gasto extra diretamente via API
-            const novoGasto = await adicionarGastoExtra(viagem.id, {
+            // Envia o gasto extra para a API com o valor garantido como número
+            const novoGasto = await adicionarGastoExtra(viagemDetalhes.id, {
                 descricao: gastoDescricao,
-                valor: valorNumerico, // Passa o número aqui
+                valor: valorNumerico,
             });
-
-            // Atualizar a lista de gastos de forma imutável
+    
             setGastos((prevGastos) => [...prevGastos, novoGasto]);
-
+    
             alert('Gasto extra adicionado com sucesso!');
             setGastoDescricao('');
-            setGastoValor(''); // Reseta o campo de valor
+            setGastoValor('');
         } catch (error) {
             console.error('Erro ao adicionar gasto extra:', error);
             alert('Não foi possível adicionar o gasto extra.');
         }
     };
-
 
     const handleWhatsAppMessage = () => {
         if (viagemDetalhes?.mensagem_whatsapp && viagemDetalhes?.motorista_whatsapp) {
@@ -65,7 +64,6 @@ const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { vi
         return <p>Carregando detalhes da viagem...</p>;
     }
 
-    // Extração dos dados da viagem
     const {
         destino,
         horario,
@@ -90,7 +88,7 @@ const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { vi
                 <p>Sem gastos extras registrados.</p>
             ) : (
                 gastos.map((gasto: any, index: number) => {
-                    const valor = parseFloat(gasto.valor);
+                    const valor = parseFloat(gasto.valor);  // Converte para número, caso seja uma string
                     return (
                         <p key={index}>
                             {gasto.descricao}: R$ {isNaN(valor) ? 'Valor inválido' : valor.toFixed(2)}
@@ -108,10 +106,13 @@ const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { vi
             />
             <input
                 type="number"
-                placeholder="Valor"
                 value={gastoValor}
                 onChange={(e) => setGastoValor(e.target.value)}
+                placeholder="Valor"
+                min="0"
+                step="any" // Permite valores decimais
             />
+
             <button onClick={handleAdicionarGasto}>Adicionar Gasto</button>
 
             <h3>Mensagem para WhatsApp</h3>

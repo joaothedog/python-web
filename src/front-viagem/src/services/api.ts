@@ -69,6 +69,8 @@ export const adicionarGastoExtra = async (
     viagemId: number,
     dados: { valor: number; descricao: string }
 ) => {
+    // Verifique o formato de dados antes de enviar para a API
+    console.log('Dados do gasto a serem enviados:', dados);
     const response = await api.post(`/viagem/${viagemId}/gasto/`, dados);
     return response.data; // Retorna o gasto recém-criado
 };
