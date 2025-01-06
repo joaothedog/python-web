@@ -1,0 +1,3 @@
+ajeitar p/ aparecer gastos extras na tela dos detalhes - feito
+ajeitar para pegar o numero do whatsapp do motorista - feito
+sempre que configurar uma nova tarefa, voltar para index - feito

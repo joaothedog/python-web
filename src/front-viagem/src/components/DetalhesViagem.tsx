@@ -1,0 +1,128 @@
+import React, { useState, useEffect } from 'react';
+import { adicionarGastoExtra } from '../services/api';
+import { formatarHorario, formatarNumeroTelefone } from '../utils/formatters';
+
+interface DetalhesViagemProps {
+    viagem: any;
+    onClose: () => void; // Callback para fechar o modal
+}
+
+interface Gasto {
+    descricao: string;
+    valor: number;
+}
+
+const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { viagem: any; onClose: () => void }) => {
+    const [gastos, setGastos] = useState<Gasto[]>([]);
+    const [gastoDescricao, setGastoDescricao] = useState('');
+    const [gastoValor, setGastoValor] = useState<string>('');
+
+    // Acessa os dados diretamente de 'viagem.viagem'
+    const viagemDetalhes = viagem?.viagem;
+
+    useEffect(() => {
+        if (viagemDetalhes) {
+            setGastos(viagemDetalhes.gastos || []);
+        }
+    }, [viagemDetalhes]);
+
+    const handleAdicionarGasto = async () => {
+        const valorNumerico = parseFloat(gastoValor); // Converte o valor para número
+        if (!viagem?.id || !gastoDescricao || isNaN(valorNumerico) || valorNumerico <= 0) {
+            alert('Preencha todos os campos com valores válidos.');
+            return;
+        }
+        try {
+            // Adicionar o gasto extra diretamente via API
+            const novoGasto = await adicionarGastoExtra(viagem.id, {
+                descricao: gastoDescricao,
+                valor: valorNumerico, // Passa o número aqui
+            });
+
+            // Atualizar a lista de gastos de forma imutável
+            setGastos((prevGastos) => [...prevGastos, novoGasto]);
+
+            alert('Gasto extra adicionado com sucesso!');
+            setGastoDescricao('');
+            setGastoValor(''); // Reseta o campo de valor
+        } catch (error) {
+            console.error('Erro ao adicionar gasto extra:', error);
+            alert('Não foi possível adicionar o gasto extra.');
+        }
+    };
+
+
+    const handleWhatsAppMessage = () => {
+        if (viagemDetalhes?.mensagem_whatsapp && viagemDetalhes?.motorista_whatsapp) {
+            const url = `https://wa.me/${viagemDetalhes.motorista_whatsapp}?text=${encodeURIComponent(viagemDetalhes.mensagem_whatsapp)}`;
+            window.open(url, '_blank');
+        } else {
+            alert('Número do motorista ou mensagem indisponível.');
+        }
+    };
+
+    if (!viagemDetalhes) {
+        return <p>Carregando detalhes da viagem...</p>;
+    }
+
+    // Extração dos dados da viagem
+    const {
+        destino,
+        horario,
+        nome_motorista,
+        total_passageiros,
+        receita_bruta,
+        motorista_whatsapp,
+    } = viagemDetalhes;
+
+    return (
+        <div>
+            <h2>Detalhes da Viagem</h2>
+            <p><strong>Destino:</strong> {destino}</p>
+            <p><strong>Horário:</strong> {formatarHorario(horario)}</p>
+            <p><strong>Motorista:</strong> {nome_motorista}</p>
+            <p><strong>Total de Passageiros:</strong> {total_passageiros}</p>
+            <p><strong>Receita Bruta:</strong> R$ {parseFloat(receita_bruta).toFixed(2)}</p>
+            <p><strong>Contato Motorista:</strong> {formatarNumeroTelefone(motorista_whatsapp) || 'Número indisponível'}</p>
+
+            <h3>Gastos Extras</h3>
+            {gastos.length === 0 ? (
+                <p>Sem gastos extras registrados.</p>
+            ) : (
+                gastos.map((gasto: any, index: number) => {
+                    const valor = parseFloat(gasto.valor);
+                    return (
+                        <p key={index}>
+                            {gasto.descricao}: R$ {isNaN(valor) ? 'Valor inválido' : valor.toFixed(2)}
+                        </p>
+                    );
+                })
+            )}
+
+            <h3>Adicionar Gasto Extra</h3>
+            <input
+                type="text"
+                placeholder="Descrição"
+                value={gastoDescricao}
+                onChange={(e) => setGastoDescricao(e.target.value)}
+            />
+            <input
+                type="number"
+                placeholder="Valor"
+                value={gastoValor}
+                onChange={(e) => setGastoValor(e.target.value)}
+            />
+            <button onClick={handleAdicionarGasto}>Adicionar Gasto</button>
+
+            <h3>Mensagem para WhatsApp</h3>
+            <button onClick={handleWhatsAppMessage}>
+                Enviar Detalhes pelo WhatsApp
+            </button>
+
+            <br />
+            <button onClick={onClose}>Fechar</button>
+        </div>
+    );
+};
+
+export default DetalhesViagem;
