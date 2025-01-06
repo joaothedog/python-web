@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { novaViagem } from '../services/api';
 
 const NovaViagemForm: React.FC = () => {
-    const navigate = useNavigate(); // Inicializa o hook para navegação
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         destino: '',
         horario: '',
@@ -20,16 +20,14 @@ const NovaViagemForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Verifica se o horário está preenchido e formata para o padrão correto
         if (formData.horario) {
-            // Substitui o 'T' por um espaço e adiciona os segundos no formato correto
             formData.horario = formData.horario.replace("T", " ") + ":00";
         }
 
         try {
             await novaViagem(formData);
             alert('Viagem criada com sucesso!');
-            navigate('/'); // Redireciona para a página de índice
+            navigate('/');
             setFormData({
                 destino: '',
                 horario: '',

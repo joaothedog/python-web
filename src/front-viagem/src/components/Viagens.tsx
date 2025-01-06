@@ -40,8 +40,8 @@ const ViagensLista: React.FC = () => {
     const handleAbrirDetalhes = async (id: number) => {
         try {
             const viagemDetalhada = await detalhesViagem(id);
-            console.log('Dados da viagem recebidos:', viagemDetalhada); // Verifique a resposta aqui
-            setViagemSelecionada(viagemDetalhada); // Atualiza os dados da viagem
+            console.log('Dados da viagem recebidos:', viagemDetalhada); // debug
+            setViagemSelecionada(viagemDetalhada); // atualiza viagens
         } catch (error) {
             console.error('Erro ao carregar os detalhes da viagem:', error);
             alert('Erro ao carregar os detalhes da viagem.');
@@ -49,7 +49,7 @@ const ViagensLista: React.FC = () => {
     };
 
     const handleFecharModal = () => {
-        setViagemSelecionada(null); // Fecha o modal
+        setViagemSelecionada(null); // fechar modal
     };
 
     // const handleDetalhes = (id: number) => {

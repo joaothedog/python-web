@@ -4,7 +4,7 @@ import { formatarHorario, formatarNumeroTelefone } from '../utils/formatters';
 
 interface DetalhesViagemProps {
     viagem: any;
-    onClose: () => void; // Callback para fechar o modal
+    onClose: () => void;
 }
 
 interface Gasto {
@@ -15,7 +15,7 @@ interface Gasto {
 const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { viagem: any; onClose: () => void }) => {
     const [gastos, setGastos] = useState<Gasto[]>([]);
     const [gastoDescricao, setGastoDescricao] = useState('');
-    const [gastoValor, setGastoValor] = useState<string>(''); // Iniciar como string vazia
+    const [gastoValor, setGastoValor] = useState<string>('');
 
     const viagemDetalhes = viagem?.viagem;
     
@@ -34,7 +34,7 @@ const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { vi
         const valorNumerico = parseFloat(gastoValor);
     
         try {
-            // Envia o gasto extra para a API com o valor garantido como número
+            // envia o gasto extra para a API com o valor garantido um number
             const novoGasto = await adicionarGastoExtra(viagemDetalhes.id, {
                 descricao: gastoDescricao,
                 valor: valorNumerico,
@@ -88,7 +88,7 @@ const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { vi
                 <p>Sem gastos extras registrados.</p>
             ) : (
                 gastos.map((gasto: any, index: number) => {
-                    const valor = parseFloat(gasto.valor);  // Converte para número, caso seja uma string
+                    const valor = parseFloat(gasto.valor); // string to number
                     return (
                         <p key={index}>
                             {gasto.descricao}: R$ {isNaN(valor) ? 'Valor inválido' : valor.toFixed(2)}
@@ -110,7 +110,7 @@ const DetalhesViagem: React.FC<DetalhesViagemProps> = ({ viagem, onClose }: { vi
                 onChange={(e) => setGastoValor(e.target.value)}
                 placeholder="Valor"
                 min="0"
-                step="any" // Permite valores decimais
+                step="any" // permite valores decimais
             />
 
             <button onClick={handleAdicionarGasto}>Adicionar Gasto</button>
